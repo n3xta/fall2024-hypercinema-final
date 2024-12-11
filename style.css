@@ -5,8 +5,8 @@ body, html {
     font-family: 'Impact', sans-serif;
     box-sizing: border-box; /* Add this line */
     overflow: hidden; /* Prevent scrolling */
-    background-color: rgb(255, 255, 255); /* Set background color to white */
-    color: black; /* Set text color to black */
+    /* background-color: rgb(255, 255, 255); */
+    color: black;
 }
 
 /* 隐藏文本框光标 */
@@ -22,8 +22,9 @@ input, textarea {
     position: relative;
     border: 10px solid #656565;
     box-sizing: border-box; /* Ensure border is included in height */
-    z-index: 1;
+    z-index: 3;
     color: black; /* Set text color to black */
+    background-color: transparent;
 }
 
 .pad {
@@ -105,7 +106,7 @@ canvas {
     left: 10px;
     font-size: 2em;
     cursor: pointer;
-    z-index: 2;
+    z-index: 5;
     color: black; /* Set text color to black */
 }
 
@@ -188,6 +189,10 @@ canvas {
 }
 
 .video-container {
+    display: none; /* Hide the video container */
+}
+
+.image-sequence {
     position: absolute;
     top: 0;
     left: 0;
@@ -198,9 +203,31 @@ canvas {
     background: transparent;
 }
 
-.video-container video {
-    width: 100%; /* 修改为100% */
-    height: auto; /* 修改为auto */
-    object-fit: cover;
-    display: block; /* Ensure the video is displayed as a block element */
+.image-sequence img {
+    height: 100vh;
+    object-fit: contain;
+    margin: 0 auto;
+    display: none; /* Initially hide all images */
+}
+
+.text-bubble {
+    position: absolute;
+    z-index: 2; /* Ensure it is above the image sequence */
+    animation: fadeInOutBubble 2s forwards;
+    max-width: 300px; /* Set maximum width */
+}
+
+@keyframes fadeInOutBubble {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }

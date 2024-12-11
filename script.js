@@ -226,6 +226,72 @@ intervalId = setInterval(() => {
 // 确认事件监听器是否被多次添加
 console.log('Adding event listeners to pads');
 
+const imageSequenceContainer = document.querySelector('.image-sequence');
+const imageCount = 12;
+let currentImageIndex = 0;
+let imageIntervalId;
+
+function startImageSequence() {
+    imageIntervalId = setInterval(() => {
+        const images = imageSequenceContainer.querySelectorAll('img');
+        images.forEach((img, index) => {
+            img.style.display = index === currentImageIndex ? 'block' : 'none';
+        });
+        currentImageIndex = (currentImageIndex + 1) % imageCount;
+    }, 1000 / 12); // Loop through images each 1/12 second
+}
+
+const textBubbleImages = ['A.png', 'B.png', 'C.png'];
+
+function createTextBubble(pad) {
+    const bubble = document.createElement('img');
+    bubble.src = `public/${textBubbleImages[Math.floor(Math.random() * textBubbleImages.length)]}`;
+    bubble.classList.add('text-bubble');
+
+    document.body.appendChild(bubble); // Append first to calculate dimensions
+
+    const bubbleRect = bubble.getBoundingClientRect(); // Get actual size
+    const padRect = pad.getBoundingClientRect();
+
+    // Base position relative to the pad
+    let left = padRect.left + padRect.width / 2 - bubbleRect.width / 2;
+    let top = padRect.top + padRect.height;
+
+    // Add randomness
+    const randomHorizontalOffset = (Math.random() - 0.5) * 300; // Random offset between -100 and +100
+    const randomVerticalOffset = (Math.random() - 0.5) * 200; // Random offset between -50 and +50
+    left += randomHorizontalOffset;
+    top += randomVerticalOffset;
+
+    // Ensure the bubble is fully inside the viewport
+    if (left + bubbleRect.width > window.innerWidth) {
+        left = window.innerWidth - bubbleRect.width;
+    } else if (left < 0) {
+        left = 0;
+    }
+    if (top + bubbleRect.height > window.innerHeight) {
+        top = window.innerHeight - bubbleRect.height;
+    } else if (top < 0) {
+        top = 0;
+    }
+
+    // Apply adjusted positions
+    bubble.style.position = 'absolute'; // Ensure absolute positioning
+    bubble.style.left = `${left}px`;
+    bubble.style.top = `${top}px`;
+
+    console.log('Text bubble created at random position:', { left, top });
+
+    setTimeout(() => {
+        if (bubble.parentNode) {
+            bubble.parentNode.removeChild(bubble);
+            console.log('Text bubble removed:', bubble);
+        }
+    }, 2000);
+}
+
+
+
 pads.forEach(pad => {
     pad.addEventListener('click', () => {
         const currentTime = Date.now();
@@ -235,6 +301,7 @@ pads.forEach(pad => {
             audio.play();
             audioStarted = true;
             startTime = currentTime;
+            startImageSequence(); // Start the image sequence
         }
 
         const elapsedTime = currentTime - startTime;
@@ -251,7 +318,7 @@ pads.forEach(pad => {
             lastInterval = currentInterval;
 
             let word = pad.getAttribute('data-word');
-            console.log(`Selected word: ${word}`); // 新的调试输出
+            console.log(`Selected word: ${word}`);
 
             // 确保当前节拍数组已初始化
             if (!beatWords[currentInterval]) {
@@ -262,16 +329,16 @@ pads.forEach(pad => {
             if (beatWords[currentInterval].length === 0) {
                 // 存储当前节拍的选词
                 beatWords[currentInterval].push(word);
-                console.log(`beatWords[${currentInterval}]: ${beatWords[currentInterval]}`); // 新的调试输出
+                console.log(`beatWords[${currentInterval}]: ${beatWords[currentInterval]}`);
 
                 // 播放音频（允许重叠）
                 const audioClone = audioMap[word].cloneNode();
-                console.log(`Before playing audio for word: ${word}, paused=${audioClone.paused}, currentTime=${audioClone.currentTime}`); // 新的调试输出
+                console.log(`Before playing audio for word: ${word}, paused=${audioClone.paused}, currentTime=${audioClone.currentTime}`); 
                 audioClone.currentTime = 0;
                 audioClone.play().then(() => {
-                    console.log(`After playing audio for word: ${word}, paused=${audioClone.paused}, currentTime=${audioClone.currentTime}`); // 新的调试输出
+                    console.log(`After playing audio for word: ${word}, paused=${audioClone.paused}, currentTime=${audioClone.currentTime}`);
                 }).catch(error => {
-                    console.error(`Error playing audio for word: ${word}`, error); // 新的调试输出
+                    console.error(`Error playing audio for word: ${word}`, error);
                 });
 
                 // 创建一个显示单词的元素
@@ -293,11 +360,13 @@ pads.forEach(pad => {
                     beatDivs[currentInterval].classList.add('one-word');
                 }
             } else {
-                console.log(`当前节拍已有词语: ${beatWords[currentInterval]}`); // 新的调试输出
+                console.log(`Already have words: ${beatWords[currentInterval]}`);
             }
         } else {
-            console.log('点击被忽略，因为在同一个间隔内已处理过');
+            console.log('Neglected click');
         }
+
+        createTextBubble(pad);
     });
 });
 
@@ -326,7 +395,7 @@ Events.on(engine, 'afterUpdate', () => {
 });
 
 // 调整重力（可选）
-engine.world.gravity.y = 1; // 默认值为1，可以根据需要调整
+engine.world.gravity.y = 0.8; // 默认值为1，可以根据需要调整
 
 // 添加边界，防止文字弹出视窗之外
 const wallOptions = { isStatic: true };
@@ -381,19 +450,4 @@ window.addEventListener('resize', () => {
         { x: window.innerWidth + 100, y: window.innerHeight },
         { x: window.innerWidth, y: window.innerHeight }
     ]);
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    const video = document.querySelector('.video-container video');
-    if (video) {
-        console.log('Video element found:', video);
-        video.addEventListener('error', (e) => {
-            console.error('Error loading video:', e);
-        });
-        video.addEventListener('loadeddata', () => {
-            console.log('Video loaded successfully');
-        });
-    } else {
-        console.error('Video element not found');
-    }
 });
