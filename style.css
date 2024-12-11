@@ -240,7 +240,6 @@ canvas {
     height: 100%;
     object-fit: cover;
     z-index: 10;
-    opacity: 0;
     display: block; /* Ensure the video is displayed */
     pointer-events: none; /* Allow clicks to pass through */
 }

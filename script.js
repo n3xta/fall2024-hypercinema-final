@@ -142,7 +142,7 @@ function createFallingWord(word) {
 }
 
 // 定时器，用于处理节拍和回放
-const glitchThreshold = 5; // 调节这个参数来设置触发glitch的词汇密度阈值
+const glitchThreshold = 120; // 调节这个参数来设置触发glitch的词汇密度阈值
 let glitchActive = false;
 let intervalId;
 
@@ -156,14 +156,14 @@ function checkForGlitch() {
 }
 
 function triggerGlitch() {
-    // document.body.classList.add('glitch');
+    document.body.classList.add('glitch');
     audio.pause();
     gsap.to(document.body, {
         duration: 1,
         opacity: 0,
         onComplete: () => {
-            // document.body.classList.remove('glitch'); // 移除glitch类
-            // document.body.style.backgroundColor = 'black';
+            document.body.classList.remove('glitch'); // 移除glitch类
+            document.body.style.backgroundColor = 'black';
             document.body.innerHTML = '';
             stopAllAudio();
             clearScreen();
@@ -183,15 +183,8 @@ function triggerGlitch() {
             console.log('Video element created:', video);
             console.log('Video source:', video.src);
 
-            // 淡入视频并恢复body的opacity
-            gsap.to(video, {
-                duration: 1,
-                opacity: 1,
-                onComplete: () => {
-                    console.log('Video fade-in complete');
-                    document.body.style.opacity = 1; // 恢复body的opacity
-                }
-            });
+            // 直接显示视频
+            document.body.style.opacity = 1; // 恢复body的opacity
         }
     });
 }
@@ -316,8 +309,36 @@ function createTextBubble(pad) {
     }, 2000);
 }
 
+// 添加 "click!" 文本框
+const clickPrompt = document.createElement('div');
+clickPrompt.classList.add('click-prompt');
+clickPrompt.textContent = 'Click!';
+document.body.appendChild(clickPrompt);
+
+// 为 "click!" 文本框添加样式
+const style = document.createElement('style');
+style.textContent = `
+    .click-prompt {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 3rem;
+        color: white;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 1rem 2rem;
+        z-index: 1000;
+    }
+`;
+document.head.appendChild(style);
+
 pads.forEach(pad => {
     pad.addEventListener('click', () => {
+        // 移除 "click!" 文本框
+        if (clickPrompt.parentNode) {
+            clickPrompt.parentNode.removeChild(clickPrompt);
+        }
+
         const currentTime = Date.now();
 
         // 如果音频还未开始，播放音频并记录开始时间
@@ -444,7 +465,7 @@ window.addEventListener('resize', () => {
         { x: 0, y: window.innerHeight + 100 }
     ]);
 
-    // 更新墙壁位置和大小
+    // 更新墙壁位置和大��
     Body.setPosition(walls[0], { x: window.innerWidth / 2, y: -50 }); // 顶部
     Body.setPosition(walls[1], { x: window.innerWidth / 2, y: window.innerHeight + 50 }); // 底部
     Body.setPosition(walls[2], { x: -50, y: window.innerHeight / 2 }); // 左侧
