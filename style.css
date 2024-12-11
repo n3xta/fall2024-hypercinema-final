@@ -20,7 +20,7 @@ input, textarea {
     grid-template-rows: repeat(4, 1fr);
     height: 100vh; /* Set height to 100vh */
     position: relative;
-    border: 10px solid #656565;
+    border: 10px solid #686868;
     box-sizing: border-box; /* Ensure border is included in height */
     z-index: 3;
     color: black; /* Set text color to black */
