@@ -81,9 +81,10 @@ audio.addEventListener('loadedmetadata', () => {
 // 更新进度条
 function updateProgressBar() {
     const progressBar = document.querySelector('.progress-bar .progress');
-    const progress = (audio.currentTime / audio.duration) * 100;
-    progressBar.style.width = progress + '%';
-
+    if (progressBar) {
+        const progress = (audio.currentTime / audio.duration) * 100;
+        progressBar.style.width = progress + '%';
+    }
     requestAnimationFrame(updateProgressBar);
 }
 updateProgressBar();
@@ -141,7 +142,7 @@ function createFallingWord(word) {
 }
 
 // 定时器，用于处理节拍和回放
-const glitchThreshold = 120; // 调节这个参数来设置触发glitch的词汇密度阈值
+const glitchThreshold = 5; // 调节这个参数来设置触发glitch的词汇密度阈值
 let glitchActive = false;
 let intervalId;
 
@@ -155,17 +156,42 @@ function checkForGlitch() {
 }
 
 function triggerGlitch() {
-    document.body.classList.add('glitch');
+    // document.body.classList.add('glitch');
     audio.pause();
     gsap.to(document.body, {
         duration: 1,
         opacity: 0,
         onComplete: () => {
-            document.body.style.backgroundColor = 'black';
+            // document.body.classList.remove('glitch'); // 移除glitch类
+            // document.body.style.backgroundColor = 'black';
             document.body.innerHTML = '';
             stopAllAudio();
             clearScreen();
             clearInterval(intervalId); // 停止掉落单词的逻辑
+
+            // 创建视频元素
+            const video = document.createElement('video');
+            video.src = 'public/ending.mp4';
+            video.classList.add('ending-video');
+            video.autoplay = true;
+            video.playsInline = true; // 兼容移动设备
+            video.controls = false;
+            video.style.display = 'block'; // Ensure the video is displayed
+            document.body.appendChild(video);
+
+            // 调试信息
+            console.log('Video element created:', video);
+            console.log('Video source:', video.src);
+
+            // 淡入视频并恢复body的opacity
+            gsap.to(video, {
+                duration: 1,
+                opacity: 1,
+                onComplete: () => {
+                    console.log('Video fade-in complete');
+                    document.body.style.opacity = 1; // 恢复body的opacity
+                }
+            });
         }
     });
 }
@@ -290,8 +316,6 @@ function createTextBubble(pad) {
     }, 2000);
 }
 
-
-
 pads.forEach(pad => {
     pad.addEventListener('click', () => {
         const currentTime = Date.now();
@@ -313,7 +337,7 @@ pads.forEach(pad => {
         console.log(`currentInterval: ${currentInterval}`);
         console.log(`lastInterval: ${lastInterval}`);
 
-        // 检查当前间隔是否已处理过
+        // 检查当前间隔是否已处��过
         if (currentInterval !== lastInterval) {
             lastInterval = currentInterval;
 
