@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Launchpad</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- 引入Matter.js库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <!-- 引入GSAP库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <!-- 引入Google字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Open+Sans&family=Roboto&family=Poppins&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="pause-button">⏸</div>
+    <div class="video-container">
+        <video src="public/phone.mov" autoplay loop muted></video>
+    </div>
+    <div class="container">
+        <div class="pad" data-word="rizz"></div>
+        <div class="pad" data-word="npc"></div>
+        <div class="pad" data-word="based"></div>
+        <div class="pad" data-word="cringe"></div>
+
+        <div class="pad" data-word="mid"></div>
+        <div class="pad" data-word="slay"></div>
+        <div class="pad" data-word="gatekeep"></div>
+        <div class="pad" data-word="ratio"></div>
+
+        <div class="pad" data-word="no_cap"></div>
+        <div class="pad" data-word="chad"></div>
+        <div class="pad" data-word="simp"></div>
+        <div class="pad" data-word="W"></div>
+
+        <div class="pad" data-word="L"></div>
+        <div class="pad" data-word="yeet"></div>
+        <div class="pad" data-word="bussin"></div>
+        <div class="pad" data-word="cope"></div>
+    </div>
+    <div class="falling-words-container"></div>
+    <div class="progress-bar">
+        <div class="progress"></div>
+        <div class="beats">
+            <!-- 节拍指示器，将在脚本中动态生成 -->
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

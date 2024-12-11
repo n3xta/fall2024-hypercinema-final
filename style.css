@@ -1,0 +1,206 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Impact', sans-serif;
+    box-sizing: border-box; /* Add this line */
+    overflow: hidden; /* Prevent scrolling */
+    background-color: rgb(255, 255, 255); /* Set background color to white */
+    color: black; /* Set text color to black */
+}
+
+/* 隐藏文本框光标 */
+input, textarea {
+    caret-color: transparent;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    height: 100vh; /* Set height to 100vh */
+    position: relative;
+    border: 10px solid #656565;
+    box-sizing: border-box; /* Ensure border is included in height */
+    z-index: 1;
+    color: black; /* Set text color to black */
+}
+
+.pad {
+    border: 1px solid #656565;
+    position: relative;
+    user-select: none;
+    color: black; /* Set text color to black */
+}
+
+.word-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 6vw;
+    opacity: 0;
+    animation: fadeInOut 0.5s forwards;
+    color: black; /* Set text color to black */
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes clearScreen {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.falling-words-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0; /* 确保在launchpad下方 */
+}
+
+.falling-word {
+    position: absolute;
+    font-size: 3vw;
+    pointer-events: none;
+    z-index: 0; /* 确保在launchpad下方 */
+    font-family: inherit; /* 使用元素设置的字体 */
+    color: black; /* Set text color to black */
+}
+
+/* 隐藏Matter.js默认的canvas */
+canvas {
+    display: none;
+}
+
+/* 下落动画 */
+@keyframes fall {
+    0% {
+        top: -50px;
+    }
+    100% {
+        top: calc(100% - 50px); /* 落到底部 */
+    }
+}
+
+.pause-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 2em;
+    cursor: pointer;
+    z-index: 2;
+    color: black; /* Set text color to black */
+}
+
+.progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background-color: rgba(200, 200, 200, 0.5);
+    box-sizing: border-box;
+}
+
+.progress-bar .progress {
+    height: 100%;
+    width: 0%;
+    background-color: rgba(100, 100, 100, 0.5);
+}
+
+.progress-bar .beats {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+}
+
+.progress-bar .beats .beat {
+    flex: 1;
+    border-right: 1px solid #aaa;
+    position: relative;
+}
+
+.progress-bar .beats .beat.assigned::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(255, 255, 0, 0.5);
+}
+
+.progress-bar .beats .beat.one-word::after {
+    background-color: rgba(255, 255, 0, 0.8); /* 增加透明度 */
+}
+
+.progress-bar .beats .beat.two-words::after {
+    background-color: rgba(255, 165, 0, 0.8); /* 增加透明度 */
+}
+
+.progress-bar .beats .beat.three-or-more-words::after {
+    background-color: rgba(255, 0, 0, 0.8); /* 增加透明度 */
+}
+
+.glitch {
+    animation: glitch 0.3s infinite;
+}
+
+@keyframes glitch {
+    0% {
+        transform: translate(0);
+    }
+    20% {
+        transform: translate(-5px, 5px);
+    }
+    40% {
+        transform: translate(5px, -5px);
+    }
+    60% {
+        transform: translate(-5px, -5px);
+    }
+    80% {
+        transform: translate(5px, 5px);
+    }
+    100% {
+        transform: translate(0);
+    }
+}
+
+.video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 1; /* Ensure it is beneath the launchpad layer */
+    overflow: hidden;
+    background: transparent;
+}
+
+.video-container video {
+    width: 100%; /* 修改为100% */
+    height: auto; /* 修改为auto */
+    object-fit: cover;
+    display: block; /* Ensure the video is displayed as a block element */
+}
